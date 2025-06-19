@@ -8,7 +8,7 @@ export default function ReceiverForm({ senderEmail }) {
 
     const local = 'http://localhost:8000'
     const api = 'https://gmail-b.onrender.com'
-    const [theme, setTheme] = useState('theme01')
+    const [theme, setTheme] = useState('')
 
     const [emails, setEmails] = useState([]);
     const [subject, setSubject] = useState('');
@@ -30,7 +30,6 @@ export default function ReceiverForm({ senderEmail }) {
     };
 
     const handleSend = async () => {
-        if(!newmessage){ setnewMessage(message)}
         const res = await axios.post(`${api}/sendemails`, {
             senderEmail, subject, newmessage, receivers: emails,
         });
@@ -43,6 +42,7 @@ export default function ReceiverForm({ senderEmail }) {
     }
 
     function handletheme(theme) {
+        setTheme(theme)
         if (theme == 'theme02') {
             let modifiedmsg = `${message}
             <div style="display: flex; flex-direction: column; align-items:baseline font-family: Arial, sans-serif;">
@@ -74,9 +74,12 @@ export default function ReceiverForm({ senderEmail }) {
 </div>
             `
             setnewMessage(modifiedmsg)
+             console.log(modifiedmsg)
         } else {
             setnewMessage(message)
+             console.log(message)
         }
+       
     }
     return (
         <div style={{ marginTop: '30px' }}>
@@ -109,10 +112,11 @@ export default function ReceiverForm({ senderEmail }) {
                                     <h5>OR</h5>
                                     <textarea name="email" id="" placeholder='List of emails' onChange={(e) => handleinputemails(e.target.value)}></textarea>
                                     <select name="Theme" className='mt-2' onChange={(e) => handletheme(e.target.value)}>
+                                        <option value="theme01">Select Theme</option>
                                         <option value="theme01">Theme I</option>
                                         <option value="theme02">Theme II</option>
                                     </select>
-                                    <button onClick={handleSend} className='mt-4'>Send Bulk Email</button>
+                                    {theme && <button onClick={handleSend} className='mt-4'>Send Bulk Email</button>}
                                 </div>
                                 <div className="col-md-6 col-sm-12">
                                     {
