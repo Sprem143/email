@@ -30,6 +30,7 @@ export default function ReceiverForm({ senderEmail }) {
     };
 
     const handleSend = async () => {
+        if(!newmessage){ setnewMessage(message)}
         const res = await axios.post(`${api}/sendemails`, {
             senderEmail, subject, newmessage, receivers: emails,
         });
