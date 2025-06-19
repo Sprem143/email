@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import axios from 'axios';
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import '../App.css'
 export default function ReceiverForm({ senderEmail }) {
 
     const local = 'http://localhost:8000'
     const api = 'https://gmail-b.onrender.com'
-
+    const [theme, setTheme] = useState('theme01')
 
     const [emails, setEmails] = useState([]);
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
+    const [newmessage, setnewMessage] = useState('');
     const [result, setResult] = useState(null);
 
     const handleFile = (e) => {
@@ -28,7 +31,7 @@ export default function ReceiverForm({ senderEmail }) {
 
     const handleSend = async () => {
         const res = await axios.post(`${api}/sendemails`, {
-            senderEmail, subject, message, receivers: emails,
+            senderEmail, subject, newmessage, receivers: emails,
         });
         setResult(res.data);
     };
@@ -38,17 +41,60 @@ export default function ReceiverForm({ senderEmail }) {
         setEmails(emaillist)
     }
 
+    function handletheme(theme) {
+        if (theme == 'theme02') {
+            let modifiedmsg = `${message}
+            <div style="display: flex; flex-direction: column; align-items:baseline font-family: Arial, sans-serif;">
+  <b style="font-family: cursive;">Regards,</b><br />
+  <b style="font-family: cursive;">Saurabh Parwal,</b><br />
+  <img src="https://res.cloudinary.com/dfnzn3frw/image/upload/v1750326177/gstar_g4jkrf.png" alt="Gstar Logo" height="80" /><br />
+  <p style="margin: 5px 0;">
+    <b>USA:</b> +1-602-834-2296<br />
+    <b>India:</b> +91-8447770402
+  </p>
+  <p style="margin: 5px 0;">
+    <b>Email:</b>
+    <a href="mailto:saurabh@gstarinfotech.com" style="text-decoration: none; color: #000;">
+      saurabh@gstarinfotech.com
+    </a>
+  </p>
+  <p style="margin: 5px 0;">
+    <b>Website:</b>
+    <a href="https://www.gstarinfotech.com" style="text-decoration: none; color: #000;">
+      www.gstarinfotech.com
+    </a>
+  </p>
+  <p style="margin: 5px 0;">
+    <b>Skype:</b>
+    <a href="skype:sales@gstarinfotech.com?chat" style="text-decoration: none; color: #000;">
+      sales@gstarinfotech.com
+    </a>
+  </p>
+</div>
+            `
+            setnewMessage(modifiedmsg)
+        } else {
+            setnewMessage(message)
+        }
+    }
     return (
-        <div>
+        <div style={{ marginTop: '30px' }}>
             <h2 className='mt-4'>Send Emails</h2>
 
-            <div className="container mt-3">
+            <div className="container mb-4" style={{ minHeight: '250px' }}>
                 <div className="row">
-                    <div className="col-md-6 col-sm-12 d-flex flex-column" style={{ borderRight: '1px solid gray' }}>
+                    <div className="col-md-6 col-sm-12 d-flex flex-column textEditor" style={{ borderRight: '1px solid gray' }}>
                         <h6 className='text-start'>Subject</h6>
                         <textarea placeholder="Subject" value={subject} onChange={e => setSubject(e.target.value)} className='m-2' />
                         <h6 className='text-start'>Message</h6>
-                        <textarea placeholder="Message (HTML allowed)" rows={10} value={message} onChange={e => setMessage(e.target.value)} className='m-2' />
+                        {/* <textarea placeholder="Message (HTML allowed)" rows={10} value={message} onChange={e => setMessage(e.target.value)} className='m-2' /> */}
+                        <ReactQuill
+                            theme="snow"
+                            value={message}
+                            onChange={setMessage}
+                            placeholder="Message (HTML allowed)"
+                            className="m-2"
+                        />
 
                     </div>
                     <div className="col-md-6 col-sm-12">
@@ -61,6 +107,10 @@ export default function ReceiverForm({ senderEmail }) {
                                     <input type="file" accept=".xlsx, .xls" onChange={handleFile} />
                                     <h5>OR</h5>
                                     <textarea name="email" id="" placeholder='List of emails' onChange={(e) => handleinputemails(e.target.value)}></textarea>
+                                    <select name="Theme" className='mt-2' onChange={(e) => handletheme(e.target.value)}>
+                                        <option value="theme01">Theme I</option>
+                                        <option value="theme02">Theme II</option>
+                                    </select>
                                     <button onClick={handleSend} className='mt-4'>Send Bulk Email</button>
                                 </div>
                                 <div className="col-md-6 col-sm-12">
@@ -87,13 +137,66 @@ export default function ReceiverForm({ senderEmail }) {
                 </div>
             </div>
 
-
             {result && (
                 <div>
                     <p>Sent: {result.sent}</p>
                     <p>Failed: {result.failed}</p>
                 </div>
             )}
+            {/* ----email sample----- */}
+            <div className="container" style={{ marginTop: '60px' }}>
+                <h3>Preview</h3>
+                <hr />
+                <div className="row">
+                    <div className="col-md-4 col-sm-12" style={{ borderRight: '1px solid gray' }}>
+                        <div className="dfjcac" style={{ background: 'white', color: 'black' }}>
+                            <span className="fs-4"> Theme-I</span>
+                        </div>
+                        <div className="preview-container mt-4">
+                            <div
+                                className="preview-content"
+                                dangerouslySetInnerHTML={{ __html: message }}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-md-4 col-sm-12" style={{ borderRight: '1px solid gray' }}>
+                        <div className="dfjcac" style={{ background: 'white', color: 'black' }}>
+                            <span className="fs-4"> Theme-II</span>
+                        </div>
+
+
+                        <div className='d-flex flex-column align-items-baseline p-4'>
+                            <div className="preview-container">
+                                <div
+                                    className="preview-content"
+                                    dangerouslySetInnerHTML={{ __html: message }}
+                                />
+                            </div>
+                            <b style={{ fontFamily: 'cursive' }}>Regards,</b>
+                            <b style={{ fontFamily: 'cursive' }}>Saurabh Parwal,</b> <br />
+                            <img src="https://res.cloudinary.com/dfnzn3frw/image/upload/v1750326177/gstar_g4jkrf.png" alt="" height={80} />
+                            <p><b>USA: </b>+1-602-834-2296 <br />
+                                <b>India: </b>+91-8447770402</p>
+                            <span>    <b>E: </b><a href="mailto:saurabh@gstarinfotech.com" target='_blank' style={{ textDecoration: 'none' }}>saurabh@gstarinfotech.com</a> </span>
+                            <span>   <b>W: </b><a href="www.gstarinfotech.com" target='_blank' style={{ textDecoration: 'none' }}>www.gstarinfotech.com</a>  </span>
+                            <span>  <b>E: </b><a href="skype:sales@gstarinfotech.com?chat" style={{ textDecoration: 'none' }}>sales@gstarinfotech.com</a> </span>
+                        </div>
+                    </div>
+                    <div className="col-md-4 col-sm-12">
+                        <div className="dfjcac" style={{ background: 'white', color: 'black' }}>
+                            <span className="fs-4"> Selected Theme</span>
+                        </div>
+                        <div className="preview-container mt-4">
+                            <div
+                                className="preview-content"
+                                dangerouslySetInnerHTML={{ __html: newmessage }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     );
 }

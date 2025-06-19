@@ -36,8 +36,26 @@ button{
   opacity: 0;
   transition: opacity 0.3s;
 }
+.ql-editor {
+  background-color: #1e1e1e;
+  color: white;
+}
 
+.ql-toolbar {
+  background-color: #ffffff;
+  border-color: #444;
+}
+
+.ql-container {
+  border-color: #444;
+}
 .tooltip-container:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+
+@media screen and (max-width:760px) {
+  .textEditor{
+    min-height: 340px;
+  }
 }

@@ -9,6 +9,8 @@ function App() {
     <div className='p-4'>
       <SenderForm onSenderChange={setSenderEmail} />
       {senderEmail && <ReceiverForm senderEmail={senderEmail} />}
+
+     
     </div>
   );
 }
