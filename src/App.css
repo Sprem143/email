@@ -1,0 +1,43 @@
+#root {
+  max-width: 100%;
+  text-align: center;
+  color: white !important;
+}
+.container{
+  max-width: 100% !important;
+}
+
+.dfjcac{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+button{
+  border-radius:28px ;
+}
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  width: 80px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 4px 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 120%; /* Position above the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
