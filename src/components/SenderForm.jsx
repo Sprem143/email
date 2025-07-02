@@ -94,9 +94,9 @@ export default function SenderForm({ onSenderChange }) {
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+          <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value.trim())} />
           <br />
-          <input placeholder="App Password" value={appPassword} onChange={e => setAppPassword(e.target.value)} />
+          <input placeholder="App Password" value={appPassword} onChange={e => setAppPassword(e.target.value.trim())} />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

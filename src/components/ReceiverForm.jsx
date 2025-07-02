@@ -4,11 +4,14 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '../App.css'
+import ClockLoader from "react-spinners/ClockLoader";
+
 export default function ReceiverForm({ senderEmail }) {
 
     const local = 'http://localhost:9000'
     const api = 'https://gmail-b.onrender.com'
     const [theme, setTheme] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const [emails, setEmails] = useState([]);
     const [subject, setSubject] = useState('');
@@ -23,17 +26,18 @@ export default function ReceiverForm({ senderEmail }) {
             const wb = XLSX.read(evt.target.result, { type: 'binary' });
             const ws = wb.Sheets[wb.SheetNames[0]];
             const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-            const emails = data.flat().filter(email => email)
             setEmails(data.flat().filter(email => email));
         };
         reader.readAsBinaryString(file);
     };
 
     const handleSend = async () => {
-        // const res = await axios.post(`${local}/sendemails`, {
+        setLoading(true)
+        // const res = await axios.post(`http://localhost:8000/sendemails`, {
         const res = await axios.post(`https://gmail-b-py.onrender.com/sendemails`, {
             senderEmail, subject, newmessage, receivers: emails,
         });
+        setLoading(false)
         setResult(res.data);
     };
 
@@ -75,34 +79,36 @@ export default function ReceiverForm({ senderEmail }) {
 </div>
             `
             setnewMessage(modifiedmsg)
-             console.log(modifiedmsg)
+            console.log(modifiedmsg)
         } else {
             setnewMessage(message)
-             console.log(message)
+            console.log(message)
         }
-       
+
     }
     return (
         <div style={{ marginTop: '30px' }}>
             <h2 className='mt-4'>Send Emails</h2>
 
             <div className="container mb-4" style={{ minHeight: '250px' }}>
+
                 <div className="row">
                     <div className="col-md-6 col-sm-12 d-flex flex-column textEditor" style={{ borderRight: '1px solid gray' }}>
                         <h6 className='text-start'>Subject</h6>
                         <textarea placeholder="Subject" value={subject} onChange={e => setSubject(e.target.value)} className='m-2' />
                         <h6 className='text-start'>Message</h6>
-                        {/* <textarea placeholder="Message (HTML allowed)" rows={10} value={message} onChange={e => setMessage(e.target.value)} className='m-2' /> */}
                         <ReactQuill
                             theme="snow"
                             value={message}
                             onChange={setMessage}
                             placeholder="Message (HTML allowed)"
                             className="m-2"
+                            style={{ zIndex: '1' }}
                         />
 
                     </div>
                     <div className="col-md-6 col-sm-12">
+
                         <div className="container">
                             <div className="row">
                                 <div className="col-md-6 col-sm-12 d-flex flex-column">
@@ -135,20 +141,34 @@ export default function ReceiverForm({ senderEmail }) {
                                         </>
                                     }
                                 </div>
+                                {loading && (
+                                    <div className="sweet-loading" style={{ left: '45%', marginTop: '10px' }}>
+                                        <div style={{ display: 'grid', placeItems: 'center' }}>
+                                            <div >
+                                                <ClockLoader color="white" loading={loading} cssOverride={{ display: "block", borderColor: "red" }} size={100} aria-label="Loading Spinner" data-testid="loader" />
+                                                <h3 className='mt-2 text-center'>Please Wait...</h3>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                )}
+
+                                {result && (
+                                    <div className='mt-4'>
+                                        <h3 className='bg-success'>Sent: {result.sent}</h3>
+                                        <h3 className='bg-danger'>Failed: {result.failed}</h3>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
 
                     </div>
+
                 </div>
             </div>
 
-            {result && (
-                <div>
-                    <p>Sent: {result.sent}</p>
-                    <p>Failed: {result.failed}</p>
-                </div>
-            )}
+
             {/* ----email sample----- */}
             <div className="container" style={{ marginTop: '60px' }}>
                 <h3>Preview</h3>
