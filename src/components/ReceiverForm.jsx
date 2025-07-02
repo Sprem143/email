@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import '../App.css'
 export default function ReceiverForm({ senderEmail }) {
 
-    const local = 'http://localhost:8000'
+    const local = 'http://localhost:9000'
     const api = 'https://gmail-b.onrender.com'
     const [theme, setTheme] = useState('')
 
@@ -30,7 +30,8 @@ export default function ReceiverForm({ senderEmail }) {
     };
 
     const handleSend = async () => {
-        const res = await axios.post(`${api}/sendemails`, {
+        // const res = await axios.post(`${local}/sendemails`, {
+        const res = await axios.post(`https://gmail-b-py.onrender.com/sendemails`, {
             senderEmail, subject, newmessage, receivers: emails,
         });
         setResult(res.data);
