@@ -31,14 +31,31 @@ export default function ReceiverForm({ senderEmail }) {
         reader.readAsBinaryString(file);
     };
 
+
     const handleSend = async () => {
-        setLoading(true)
-        // const res = await axios.post(`http://localhost:8000/sendemails`, {
-        const res = await axios.post(`https://gmail-b-py.onrender.com/sendemails`, {
-            senderEmail, subject, newmessage, receivers: emails,
-        });
-        setLoading(false)
-        setResult(res.data);
+        try {
+            setLoading(true);
+            const res = await axios.post(`https://gmail-b-py.onrender.com/sendemails`, {
+                senderEmail,
+                subject,
+                newmessage,
+                receivers: emails,
+            });
+
+            setResult(res.data);
+        } catch (err) {
+            // Handle error response
+            if (err.response && err.response.data) {
+                console.log(err)           
+                const errorMsg = err.response.data.error || err.response.data.detail || "Unknown error";
+                alert("Error: " + errorMsg);
+            } else {
+                // Network error or server is down
+                alert("Network or server error. Please try again later.");
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleinputemails = (emails) => {
