@@ -15,6 +15,11 @@
 button{
   border-radius:28px ;
 }
+
+.nobckgrnd{
+  background-color: transparent !important;
+  color: white;
+}
 .tooltip-container {
   position: relative;
   display: inline-block;
