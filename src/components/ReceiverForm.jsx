@@ -8,8 +8,7 @@ import ClockLoader from "react-spinners/ClockLoader";
 
 export default function ReceiverForm({ senderEmail }) {
 
-    const local = 'http://localhost:9000'
-    const api = 'https://gmail-b.onrender.com'
+
     const [theme, setTheme] = useState('')
     const [loading, setLoading] = useState(false)
 
@@ -19,6 +18,9 @@ export default function ReceiverForm({ senderEmail }) {
     const [newmessage, setnewMessage] = useState('');
     const [result, setResult] = useState(null);
 
+
+
+  
     const handleFile = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -46,7 +48,7 @@ export default function ReceiverForm({ senderEmail }) {
         } catch (err) {
             // Handle error response
             if (err.response && err.response.data) {
-                console.log(err)           
+                console.log(err)
                 const errorMsg = err.response.data.error || err.response.data.detail || "Unknown error";
                 alert("Error: " + errorMsg);
             } else {
