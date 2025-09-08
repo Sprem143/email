@@ -8,19 +8,15 @@ import ClockLoader from "react-spinners/ClockLoader";
 
 export default function ReceiverForm({ senderEmail }) {
 
-
+    const local = 'http://localhost:9000'
+    const api = 'https://gmail-b.onrender.com'
     const [theme, setTheme] = useState('')
     const [loading, setLoading] = useState(false)
-
     const [emails, setEmails] = useState([]);
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
     const [newmessage, setnewMessage] = useState('');
-    const [result, setResult] = useState(null);
 
-
-
-  
     const handleFile = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -35,29 +31,18 @@ export default function ReceiverForm({ senderEmail }) {
 
 
     const handleSend = async () => {
-        try {
-            setLoading(true);
-            const res = await axios.post(`https://gmail-b-py.onrender.com/sendemails`, {
-                senderEmail,
-                subject,
-                newmessage,
-                receivers: emails,
-            });
 
-            setResult(res.data);
-        } catch (err) {
-            // Handle error response
-            if (err.response && err.response.data) {
-                console.log(err)
-                const errorMsg = err.response.data.error || err.response.data.detail || "Unknown error";
-                alert("Error: " + errorMsg);
-            } else {
-                // Network error or server is down
-                alert("Network or server error. Please try again later.");
-            }
-        } finally {
-            setLoading(false);
-        }
+        setLoading(true);
+        let res = await axios.post(`${api}/sendemails`, {
+            senderEmail,
+            subject,
+            newmessage,
+            receivers: emails,
+        });
+        setLoading(false)
+        console.log(res.data)
+        alert(`Successful - ${res.data.sent}, Failed - ${res.data.failed}`)
+        window.location.reload()
     };
 
     const handleinputemails = (emails) => {
@@ -172,12 +157,7 @@ export default function ReceiverForm({ senderEmail }) {
                                     </div>
                                 )}
 
-                                {result && (
-                                    <div className='mt-4'>
-                                        <h3 className='bg-success'>Sent: {result.sent}</h3>
-                                        <h3 className='bg-danger'>Failed: {result.failed}</h3>
-                                    </div>
-                                )}
+
                             </div>
                         </div>
 
@@ -189,7 +169,7 @@ export default function ReceiverForm({ senderEmail }) {
 
 
             {/* ----email sample----- */}
-            <div className="container" style={{ marginTop: '60px' }}>
+            {/* <div className="container" style={{ marginTop: '60px' }}>
                 <h3>Preview</h3>
                 <hr />
                 <div className="row">
@@ -239,7 +219,7 @@ export default function ReceiverForm({ senderEmail }) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
 
         </div>
