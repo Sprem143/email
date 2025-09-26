@@ -6,9 +6,9 @@ import 'react-quill/dist/quill.snow.css';
 import '../App.css'
 import ClockLoader from "react-spinners/ClockLoader";
 
-export default function ReceiverForm({ senderEmail }) {
+export default function ReceiverForm() {
 
-    const local = 'http://localhost:9000'
+    const local = 'http://localhost:8000'
     const api = 'https://gmail-b.onrender.com'
     const [theme, setTheme] = useState('')
     const [loading, setLoading] = useState(false)
@@ -16,7 +16,8 @@ export default function ReceiverForm({ senderEmail }) {
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
     const [newmessage, setnewMessage] = useState('');
-
+    const [email, setEmail] = useState('');
+    const [appPassword, setAppPassword] = useState('');
     const handleFile = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -34,7 +35,7 @@ export default function ReceiverForm({ senderEmail }) {
 
         setLoading(true);
         let res = await axios.post(`${api}/sendemails`, {
-            senderEmail,
+            email, appPassword,
             subject,
             newmessage,
             receivers: emails,
@@ -90,8 +91,55 @@ export default function ReceiverForm({ senderEmail }) {
         }
 
     }
+
+    const handleSave = () => {
+        if (!email || !appPassword) {
+            alert('Please enter both email and app password.');
+            return;
+        }
+
+        axios.post(`${api}/savesender`, { email, appPassword })
+            .then((res) => {
+                alert(res.data.msg);
+                setSenders([...senders, { email }]);
+                setEmail('');
+                setAppPassword('');
+            })
+            .catch((err) => {
+                console.error('Error saving sender:', err);
+                const errorMsg = err.response?.data?.error || 'Something went wrong while saving sender.';
+                alert(errorMsg);
+            });
+    };
     return (
         <div style={{ marginTop: '30px' }}>
+
+
+
+            <hr />
+            <h3>Sender Details</h3>
+            <div className="container mt-3">
+                <div className="row" >
+                    <div className="col-md-5 col-sm-12 border border-secondary dfjcac p-3">
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-4 col-sm-12 dfjcac ">
+                                    <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+                                </div>
+                                <div className="col-md-4 col-sm-12 dfjcac">
+                                    <input placeholder="App Password" value={appPassword} onChange={e => setAppPassword(e.target.value)} />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <hr />
+
+
+            {/* --------email ----------- */}
             <h2 className='mt-4'>Send Emails</h2>
 
             <div className="container mb-4" style={{ minHeight: '250px' }}>
@@ -156,14 +204,9 @@ export default function ReceiverForm({ senderEmail }) {
                                         </div>
                                     </div>
                                 )}
-
-
                             </div>
                         </div>
-
-
                     </div>
-
                 </div>
             </div>
 
