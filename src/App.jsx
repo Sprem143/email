@@ -74,7 +74,6 @@ function App() {
       }
       {
         showform &&
-
         <div className='mb-4'>
           <h2>Sign Up</h2>
           <form onSubmit={handleSubmit}>
@@ -105,8 +104,8 @@ function App() {
           <button  onClick={()=>setShowform(!showform)} >Cancel</button>
         </div>
       }
-      <SenderForm onSenderChange={setSenderEmail} />
-      {senderEmail && <ReceiverForm senderEmail={senderEmail} />}
+      {/* <SenderForm  /> */}
+       <ReceiverForm />
     </div>
   );
 }
