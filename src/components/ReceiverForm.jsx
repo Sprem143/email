@@ -9,7 +9,7 @@ import ClockLoader from "react-spinners/ClockLoader";
 export default function ReceiverForm() {
 
     const local = 'http://localhost:8000'
-    const api = 'https://gmail-b.onrender.com'
+    const api = 'https://gmail-b-py.onrender.com'
     const [theme, setTheme] = useState('')
     const [loading, setLoading] = useState(false)
     const [emails, setEmails] = useState([]);
@@ -92,25 +92,7 @@ export default function ReceiverForm() {
 
     }
 
-    const handleSave = () => {
-        if (!email || !appPassword) {
-            alert('Please enter both email and app password.');
-            return;
-        }
 
-        axios.post(`${api}/savesender`, { email, appPassword })
-            .then((res) => {
-                alert(res.data.msg);
-                setSenders([...senders, { email }]);
-                setEmail('');
-                setAppPassword('');
-            })
-            .catch((err) => {
-                console.error('Error saving sender:', err);
-                const errorMsg = err.response?.data?.error || 'Something went wrong while saving sender.';
-                alert(errorMsg);
-            });
-    };
     return (
         <div style={{ marginTop: '30px' }}>
 
