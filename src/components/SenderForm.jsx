@@ -3,7 +3,8 @@ import axios from 'axios';
 import '../App.css'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-export default function SenderForm({ onSenderChange }) {
+
+export default function SenderForm() {
 
   const [show, setShow] = useState(false);
 
@@ -89,25 +90,8 @@ export default function SenderForm({ onSenderChange }) {
   }
   return (
     <div>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value.trim())} />
-          <br />
-          <input placeholder="App Password" value={appPassword} onChange={e => setAppPassword(e.target.value.trim())} />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={editsenderemail}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <h2>Sender Configuration</h2>
+     
+      {/* <h2>Sender Configuration</h2>
       <div className="container mt-3">
         <div className="row" >
           <div className="col-md-5 col-sm-12 border border-secondary dfjcac p-3">
@@ -126,7 +110,7 @@ export default function SenderForm({ onSenderChange }) {
               </div>
             </div>
           </div>
-          <div className="col-md-4 col-sm-12 border border-secondary dfjcac flex-column p-3">
+          {/* <div className="col-md-4 col-sm-12 border border-secondary dfjcac flex-column p-3">
             <h5>Select Sender Email</h5>
             <select onChange={e => onSenderChange(e.target.value)}>
               <option>Select</option>
@@ -136,10 +120,10 @@ export default function SenderForm({ onSenderChange }) {
           </div>
           <div className="col-md-3 col-sm-12 border border-secondary dfjcac p-3">
             <button onClick={showsenderemail}>{showlist ? 'Hide' : 'Manage Sender List'}</button>
-          </div>
+          </div> 
         </div>
-      </div>
-      {
+      </div> */}
+      {/* {
         showlist &&
         <div className="p-4">
           <ol>
@@ -175,7 +159,7 @@ export default function SenderForm({ onSenderChange }) {
             }
           </ol>
         </div>
-      }
+      } */}
     </div>
   );
 }
